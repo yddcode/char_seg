@@ -39,6 +39,37 @@ img = cv2.imread('mu_bseg/img/tl25_Image_00762.jpg', 1)
 vis = img.copy() # 用于绘制矩形框图
 orig = img.copy() # 用于绘制不重叠的矩形框图
 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) # 得到灰度图
+ret, binary = cv2.threshold(gray,127,255,cv2.THRESH_BINARY)  # RETR_TREE
+contours, hierarchy = cv2.findContours(binary,cv2.RETR_CCOMP,cv2.CHAIN_APPROX_SIMPLE)  
+# <class 'list'>
+# <class 'numpy.ndarray'>
+# 1532
+# 4
+# 36
+# <class 'numpy.ndarray'>
+# 3
+# 2
+# (1, 1532, 4)
+print (type(contours))
+print (type(contours[0]))
+print (len(contours))
+print (len(contours[0]))
+print (len(contours[1]))
+
+print (type(hierarchy))  
+print (hierarchy.ndim)  
+print (hierarchy[0].ndim)  
+print (hierarchy.shape)  
+for i in range(0,len(contours)-2,3):
+    # if i % 2 == 0:
+    cv2.drawContours(vis,contours,i,(0,0,255),3)  
+    # else:
+    cv2.drawContours(vis,contours,(i+1),(0,255,0),3) 
+    cv2.drawContours(vis,contours,(i+2),(255,0,0),3)  
+cv2.namedWindow("vis",0)
+cv2.resizeWindow("vis", 800, 800) # 限定显示图像的大小
+cv2.imshow('vis', vis)
+
 mser = cv2.MSER_create() # 得到mser算法对象
 regions, _ = mser.detectRegions(gray) # 获取文本区域
 hulls = [cv2.convexHull(p.reshape(-1, 1, 2)) for p in regions] # 绘制文本区域
