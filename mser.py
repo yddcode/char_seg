@@ -70,6 +70,30 @@ cv2.namedWindow("vis",0)
 cv2.resizeWindow("vis", 800, 800) # 限定显示图像的大小
 cv2.imshow('vis', vis)
 
+row = [0, 350, 556, 765, 983, 1211, 1414, 1659, 1903, 2108, 2307, 2536, 2784, 2982, 3224, 3447, 3616, 3880, 4091, 4294, 4518]
+for i in range(0,len(row)-1,2):
+  print(row[i])
+  for j in range(len(contours)):
+    temp = contours[j][0]
+    print(temp)
+for i in range(1,len(row),2):
+  print(row[i])
+
+for j in range(0,len(row)-2,2):
+    
+    for i in range(0,len(contours)):
+        temp = contours[i][0]
+        if temp[0][1] < row[j+1] and temp[0][1] > row[j]:
+          cv2.drawContours(vis,contours,i,(0,0,255),3)  
+        # else:
+        if temp[0][1] < row[j+2] and temp[0][1] > row[j+1]:
+          cv2.drawContours(vis,contours,(i),(0,255,0),3) 
+          # cv2.drawContours(vis,contours,(i+2),(255,0,0),3)  
+cv2.namedWindow("vis",0)
+cv2.resizeWindow("vis", 700, 900) # 限定显示图像的大小
+cv2.imshow('vis', vis)
+cv2.imwrite("char_seg/seg.png", vis)
+
 mser = cv2.MSER_create() # 得到mser算法对象
 regions, _ = mser.detectRegions(gray) # 获取文本区域
 hulls = [cv2.convexHull(p.reshape(-1, 1, 2)) for p in regions] # 绘制文本区域
